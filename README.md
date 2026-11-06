@@ -1,11 +1,23 @@
 # ⚡ TurboDrop
 
+[![Latest Release](https://img.shields.io/github/v/release/TarekAboElftuoh/TurboDrop?logo=github&color=blue)](https://github.com/TarekAboElftuoh/TurboDrop/releases/latest)
 [![Platform - Windows](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)](https://github.com/TarekAboElftuoh/TurboDrop)
 [![Platform - Android](https://img.shields.io/badge/Platform-Android%207.0%2B-3DDC84?logo=android&logoColor=white)](https://github.com/TarekAboElftuoh/TurboDrop)
 [![Transfer Speed](https://img.shields.io/badge/Speed-Up%20to%20800%2B%20MB%2Fs-FFB000?logo=speedtest&logoColor=white)](https://github.com/TarekAboElftuoh/TurboDrop)
 [![License - MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **TurboDrop** is an ultra-fast, zero-configuration bidirectional file and folder streaming system connecting Windows PCs and Android devices over local Wi-Fi and Bluetooth. Engineered with high-throughput zero-copy streams, dual-bond failover, and automatic network discovery.
+
+---
+
+## 📥 Downloads
+
+Download pre-compiled binaries directly from the **[Latest Release](https://github.com/TarekAboElftuoh/TurboDrop/releases/latest)**:
+
+| Platform | Download | Description |
+| :--- | :--- | :--- |
+| **Windows PC** | [⬇️ **TurboDrop.exe**](https://github.com/TarekAboElftuoh/TurboDrop/releases/latest/download/TurboDrop.exe) | Portable single executable • No Python required |
+| **Android** | [⬇️ **TurboDrop.apk**](https://github.com/TarekAboElftuoh/TurboDrop/releases/latest/download/TurboDrop.apk) | Digitally signed package • Android 7.0 to 14+ |
 
 ---
 

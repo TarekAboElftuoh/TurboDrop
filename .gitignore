@@ -6,6 +6,12 @@ __pycache__/
 build/
 dist/
 
+# Standalone Executable & Package (Hosted on GitHub Releases)
+TurboDrop.exe
+TurboDrop.apk
+*.exe
+*.apk
+
 # Android build artifacts
 android_app/bin/
 android_app/build/
@@ -16,7 +22,7 @@ android_app/*.keystore
 android_app/debug.keystore
 *.idsig
 
-# Received & temporary files
+# Received & temporary test files
 Received_Files/
 test_scratch/
 logs/

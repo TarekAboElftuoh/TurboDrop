@@ -1,16 +1,18 @@
 # Build Script for TurboDrop Android APK
 $ErrorActionPreference = "Stop"
 
-$sdk = "C:\android-sdk"
-$buildTools = "$sdk\build-tools\34.0.0"
-$platform = "$sdk\platforms\android-34"
-$androidJar = "$platform\android.jar"
-$aapt2 = "$buildTools\aapt2.exe"
-$d8 = "$buildTools\d8.bat"
-$zipalign = "$buildTools\zipalign.exe"
-$apksigner = "$buildTools\apksigner.bat"
+$sdk = if ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { "C:\android-sdk" }
+$buildToolsDir = Get-ChildItem "$sdk\build-tools" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+$buildTools = $buildToolsDir.FullName
+$platformsDir = Get-ChildItem "$sdk\platforms" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+$androidJar = Join-Path $platformsDir.FullName "android.jar"
+$aapt2 = Join-Path $buildTools "aapt2.exe"
+$d8 = Join-Path $buildTools "d8.bat"
+$zipalign = Join-Path $buildTools "zipalign.exe"
+$apksigner = Join-Path $buildTools "apksigner.bat"
 
-$root = "c:\Users\Administrator\Downloads\phontrans\android_app"
+$scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+$root = Join-Path $scriptDir "android_app"
 Set-Location $root
 
 Write-Host "==> Cleaning previous build directories..."
@@ -50,7 +52,7 @@ if (-not (Test-Path $keystore)) {
     & keytool -genkeypair -v -keystore $keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 }
 
-$outputApk = "c:\Users\Administrator\Downloads\phontrans\TurboDrop.apk"
+$outputApk = Join-Path $scriptDir "TurboDrop.apk"
 & $apksigner sign --ks $keystore --ks-pass pass:android --key-pass pass:android --ks-key-alias androiddebugkey --out $outputApk build\aligned.apk
 if ($LASTEXITCODE -ne 0) { throw "apksigner failed" }
 

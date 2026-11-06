@@ -187,6 +187,8 @@ class WebCompanionServer:
                     query = urllib.parse.parse_qs(parsed.query)
                     filename = query.get("filename", ["uploaded_file.dat"])[0]
                     clean_name = os.path.basename(filename)
+                    if not os.path.exists(parent.save_dir):
+                        os.makedirs(parent.save_dir, exist_ok=True)
                     out_path = os.path.join(parent.save_dir, clean_name)
 
                     content_length = int(self.headers.get("Content-Length", 0))

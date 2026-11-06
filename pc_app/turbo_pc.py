@@ -76,7 +76,7 @@ class TurboDropGUI:
             base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
         self.save_dir = os.path.abspath(os.path.join(base_dir, "Received_Files"))
-        os.makedirs(self.save_dir, exist_ok=True)
+        # Note: Do NOT create folder on startup; wait until user picks a folder or receives files!
 
         self.gui_queue = queue.Queue()
         self.engine = FastReceiverEngine(self.save_dir, self._handle_engine_event)
@@ -259,7 +259,7 @@ class TurboDropGUI:
         log_card = tk.Frame(self.root, bg=CARD_BG, padx=16, pady=10, highlightbackground=CARD_BORDER, highlightthickness=1)
         log_card.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 15))
 
-        tk.Label(log_card, text="📋 Activity Log (Saved to logs/pc_server.log)", font=("Segoe UI", 9, "bold"), fg=TEXT_MUTED, bg=CARD_BG).pack(anchor="w", pady=(0, 4))
+        tk.Label(log_card, text="📋 Live Activity Log", font=("Segoe UI", 9, "bold"), fg=TEXT_MUTED, bg=CARD_BG).pack(anchor="w", pady=(0, 4))
 
         self.log_text = tk.Text(log_card, bg=BG_DARK, fg=TEXT_PRIMARY, font=("Consolas", 9), relief=tk.FLAT, padx=10, pady=8, state=tk.DISABLED)
         self.log_text.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
@@ -271,22 +271,26 @@ class TurboDropGUI:
     def _open_save_folder(self):
         try:
             if not os.path.exists(self.save_dir):
-                os.makedirs(self.save_dir, exist_ok=True)
+                messagebox.showinfo("TurboDrop", f"No files received yet.\n\nIncoming files will be saved to:\n{self.save_dir}")
+                return
             os.startfile(self.save_dir)
         except Exception as e:
             messagebox.showerror("TurboDrop", f"Could not open save directory: {e}")
 
     def _choose_folder(self):
-        chosen = filedialog.askdirectory(initialdir=self.save_dir)
+        initial = self.save_dir if os.path.exists(self.save_dir) else os.path.expanduser("~")
+        chosen = filedialog.askdirectory(initialdir=initial, title="Select Destination Folder for Received Files")
         if chosen:
-            self.save_dir = chosen
-            self.engine.save_dir = chosen
+            self.save_dir = os.path.abspath(chosen)
+            self.engine.save_dir = self.save_dir
             self.folder_lbl.config(text=f"📁 {os.path.basename(self.save_dir)}")
             self._log(f"Save directory changed to: {self.save_dir}", TEXT_MUTED)
 
     def _open_log_file(self):
         if os.path.exists(LOG_FILE):
             os.system(f'notepad.exe "{LOG_FILE}"')
+        else:
+            messagebox.showinfo("TurboDrop", "No log file recorded yet.")
 
     def _pick_send_files(self):
         files = filedialog.askopenfilenames(title="Select Files to Send to Mobile")

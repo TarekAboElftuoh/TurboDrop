@@ -15,7 +15,6 @@ import hashlib
 import shutil
 
 TEST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "test_scratch"))
-LOG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "logs"))
 shutil.rmtree(TEST_DIR, ignore_errors=True)
 os.makedirs(TEST_DIR, exist_ok=True)
 

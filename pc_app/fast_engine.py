@@ -23,7 +23,6 @@ BUFFER_SIZE = 512 * 1024  # 512 KB read buffer for max wire throughput
 class FastReceiverEngine:
     def __init__(self, save_dir: str, event_callback: Optional[Callable] = None):
         self.save_dir = os.path.abspath(save_dir)
-        os.makedirs(self.save_dir, exist_ok=True)
         self.event_callback = event_callback
         self.running = False
 

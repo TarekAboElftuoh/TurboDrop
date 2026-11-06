@@ -9,13 +9,12 @@ import sys
 import logging
 from logging.handlers import RotatingFileHandler
 
-if getattr(sys, 'frozen', False):
-    base_dir = os.path.dirname(sys.executable)
-else:
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-LOG_DIR = os.path.abspath(os.path.join(base_dir, "logs"))
-os.makedirs(LOG_DIR, exist_ok=True)
+app_data = os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA") or os.path.expanduser("~")
+LOG_DIR = os.path.join(app_data, "TurboDrop", "logs")
+try:
+    os.makedirs(LOG_DIR, exist_ok=True)
+except Exception:
+    pass
 LOG_FILE = os.path.join(LOG_DIR, "pc_server.log")
 
 # Create logger

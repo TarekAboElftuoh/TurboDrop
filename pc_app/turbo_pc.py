@@ -7,6 +7,7 @@ live speed gauges, folder preservation, and persistent logging.
 import os
 import sys
 import time
+import json
 import socket
 import threading
 import queue
@@ -20,6 +21,26 @@ from fast_engine import FastReceiverEngine
 from discovery_beacon import DiscoveryBeacon
 from web_server import WebCompanionServer
 from fast_sender import FastSender
+
+CONFIG_DIR = os.path.join(os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA") or os.path.expanduser("~"), "TurboDrop")
+CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
+
+def load_pc_config():
+    try:
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return {}
+
+def save_pc_config(cfg: dict):
+    try:
+        os.makedirs(CONFIG_DIR, exist_ok=True)
+        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+            json.dump(cfg, f, indent=2)
+    except Exception:
+        pass
 
 # Modern GitHub-Inspired Dark Theme Palette
 BG_DARK = "#0D1117"
@@ -69,26 +90,45 @@ class TurboDropGUI:
         except Exception:
             pass
 
-        # Storage directory
+        # Storage directory & User Preferences
         if getattr(sys, 'frozen', False):
             base_dir = os.path.dirname(sys.executable)
         else:
             base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-        self.save_dir = os.path.abspath(os.path.join(base_dir, "Received_Files"))
+        self.config = load_pc_config()
+        saved_dir = self.config.get("save_dir")
+        if saved_dir and os.path.exists(saved_dir):
+            self.save_dir = os.path.abspath(saved_dir)
+        else:
+            self.save_dir = os.path.abspath(os.path.join(base_dir, "Received_Files"))
         # Note: Do NOT create folder on startup; wait until user picks a folder or receives files!
 
         self.gui_queue = queue.Queue()
         self.engine = FastReceiverEngine(self.save_dir, self._handle_engine_event)
         self.engine.request_callback = self._on_inbound_transfer_request
-        self.engine.security_pin = "1337"
+        self.engine.security_pin = self.config.get("security_pin", "1337")
         self.sender = FastSender(self._handle_sender_event)
 
         self.outbound_items = []
         self.outbound_total_bytes = 0
         self.beacon = None
         self.web_server = None
-        self.security_pin_var = tk.StringVar(value="1337")
+        self.security_pin_var = tk.StringVar(value=self.engine.security_pin)
+        self.phone_ip_var = tk.StringVar(value=self.config.get("phone_ip", "192.168.100.5"))
+
+        def _on_pin_change(*_):
+            pin = self.security_pin_var.get().strip()
+            self.engine.security_pin = pin
+            self.config["security_pin"] = pin
+            save_pc_config(self.config)
+        self.security_pin_var.trace_add("write", _on_pin_change)
+
+        def _on_ip_change(*_):
+            ip = self.phone_ip_var.get().strip()
+            self.config["phone_ip"] = ip
+            save_pc_config(self.config)
+        self.phone_ip_var.trace_add("write", _on_ip_change)
 
         self._build_ui()
         self._setup_drag_and_drop()
@@ -195,12 +235,13 @@ class TurboDropGUI:
                   activebackground=ACCENT_BLUE, relief=tk.FLAT, padx=10, pady=4, cursor="hand2", command=self._pick_send_files).pack(side=tk.LEFT, padx=2)
         tk.Button(btn_box2, text="📁 Pick Folder", font=("Segoe UI", 9, "bold"), bg=CARD_BORDER, fg=TEXT_PRIMARY,
                   activebackground=ACCENT_BLUE, relief=tk.FLAT, padx=10, pady=4, cursor="hand2", command=self._pick_send_folder).pack(side=tk.LEFT, padx=2)
+        tk.Button(btn_box2, text="🗑️ Clear", font=("Segoe UI", 9, "bold"), bg=CARD_BORDER, fg=TEXT_MUTED,
+                  activebackground=ACCENT_RED, activeforeground="#FFF", relief=tk.FLAT, padx=8, pady=4, cursor="hand2", command=self._clear_staged_files).pack(side=tk.LEFT, padx=2)
 
         s_bot = tk.Frame(send_card, bg=CARD_BG)
         s_bot.pack(fill=tk.X, pady=(10, 0))
 
         tk.Label(s_bot, text="Target Phone IP:", font=("Segoe UI", 9, "bold"), fg=TEXT_MUTED, bg=CARD_BG).pack(side=tk.LEFT)
-        self.phone_ip_var = tk.StringVar(value="192.168.100.5")
         self.phone_ip_entry = tk.Entry(s_bot, textvariable=self.phone_ip_var, width=15, font=("Consolas", 10), bg=BG_DARK, fg=TEXT_PRIMARY, relief=tk.FLAT, insertbackground=TEXT_PRIMARY)
         self.phone_ip_entry.pack(side=tk.LEFT, padx=(6, 10))
 
@@ -216,7 +257,6 @@ class TurboDropGUI:
         tk.Label(s_bot, text="PIN:", font=("Segoe UI", 9, "bold"), fg=TEXT_MUTED, bg=CARD_BG).pack(side=tk.LEFT, padx=(10, 2))
         self.pin_entry = tk.Entry(s_bot, textvariable=self.security_pin_var, width=6, font=("Consolas", 10, "bold"), bg=BG_DARK, fg=ACCENT_CYAN, justify="center", relief=tk.FLAT, insertbackground=TEXT_PRIMARY)
         self.pin_entry.pack(side=tk.LEFT)
-        self.security_pin_var.trace_add("write", lambda *_: setattr(self.engine, "security_pin", self.security_pin_var.get().strip()))
 
         # 4. Live Transfer Dashboard Card
         transfer_card = tk.Frame(self.root, bg=CARD_BG, padx=16, pady=12, highlightbackground=CARD_BORDER, highlightthickness=1)
@@ -285,6 +325,34 @@ class TurboDropGUI:
             self.engine.save_dir = self.save_dir
             self.folder_lbl.config(text=f"📁 {os.path.basename(self.save_dir)}")
             self._log(f"Save directory changed to: {self.save_dir}", TEXT_MUTED)
+            self.config["save_dir"] = self.save_dir
+            save_pc_config(self.config)
+
+    def _clear_staged_files(self):
+        self.outbound_items = []
+        self.outbound_total_bytes = 0
+        self.send_status_lbl.config(text="No items selected", fg=TEXT_MUTED)
+        self.file_progress_var.set(0)
+        self.batch_progress_var.set(0)
+        self.filename_lbl.config(text="Ready")
+        self.prog_details_lbl.config(text="0 B / 0 B (0%)")
+        self.eta_lbl.config(text="ETA: 00:00")
+        self.speed_gauge_lbl.config(text="0.0 MB/s")
+        self._log("Cleared staged items queue.", TEXT_MUTED)
+
+    def _play_completion_chime(self):
+        try:
+            import winsound
+            winsound.MessageBeep(winsound.MB_ICONASTERISK)
+        except Exception:
+            try:
+                self.root.bell()
+            except Exception:
+                pass
+        try:
+            self.root.lift()
+        except Exception:
+            pass
 
     def _open_log_file(self):
         if os.path.exists(LOG_FILE):
@@ -485,6 +553,7 @@ class TurboDropGUI:
             self._append_log(f"🎉 Batch sent to mobile: {details['total_files']} files ({self._format_bytes(details['batch_sent'])}) in {details['duration_sec']:.2f}s (Avg: {details['avg_speed_mb']:.1f} MB/s)", ACCENT_GREEN)
             self.filename_lbl.config(text="✅ Finished sending to mobile!")
             self.send_status_lbl.config(text="Transfer complete! 🎉", fg=ACCENT_GREEN)
+            self._play_completion_chime()
         elif ev_type == "DECLINED":
             self._append_log(f"⚠️ {details}", ACCENT_AMBER)
             self.filename_lbl.config(text="⚠️ Transfer was declined by receiver")
@@ -550,6 +619,8 @@ class TurboDropGUI:
                 if details and not details.startswith("127."):
                     self.phone_ip_var.set(details)
                     self.send_status_lbl.config(text=f"Phone connected ({details})", fg=ACCENT_GREEN)
+                    self.config["phone_ip"] = details
+                    save_pc_config(self.config)
             elif ev_type == "FAILOVER":
                 self._append_log(details, ACCENT_AMBER)
             elif ev_type == "FILE_START":
@@ -563,6 +634,7 @@ class TurboDropGUI:
                 self._append_log(f"✅ [{f_idx}/{t_files}] Saved: {rel} ({sec:.2f}s)", ACCENT_GREEN)
             elif ev_type == "BATCH_COMPLETE":
                 self._append_log("🎉 Entire Batch Completed successfully!", ACCENT_CYAN)
+                self._play_completion_chime()
             elif ev_type == "CLIPBOARD":
                 try:
                     self.root.clipboard_clear()

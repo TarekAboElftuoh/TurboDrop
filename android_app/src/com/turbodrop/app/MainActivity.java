@@ -747,6 +747,7 @@ public class MainActivity extends Activity implements FastStreamSender.BatchList
     @Override
     public void onBatchCompleted(int totalFiles, long totalBytes, long durationMs) {
         releaseHighPerfLocks();
+        triggerCompletionHaptic();
         runOnUiThread(() -> {
             pbBatchProgress.setProgress(100);
             pbFileProgress.setProgress(100);
@@ -872,6 +873,7 @@ public class MainActivity extends Activity implements FastStreamSender.BatchList
     @Override
     public void onReceiveBatchCompleted(int totalFiles, long totalBytes, long durationMs, String saveDir) {
         releaseHighPerfLocks();
+        triggerCompletionHaptic();
         runOnUiThread(() -> {
             pbBatchProgress.setProgress(100);
             pbFileProgress.setProgress(100);
@@ -972,6 +974,19 @@ public class MainActivity extends Activity implements FastStreamSender.BatchList
             AppLogger.e("Failed to open folder", e);
             Toast.makeText(this, "Files saved in: Download/TurboDrop", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void triggerCompletionHaptic() {
+        try {
+            android.os.Vibrator v = (android.os.Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (v != null && v.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(android.os.VibrationEffect.createOneShot(120, android.os.VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    v.vibrate(120);
+                }
+            }
+        } catch (Exception ignored) {}
     }
 
     @Override

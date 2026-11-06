@@ -1,0 +1,28 @@
+# Python build & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.spec
+build/
+dist/
+
+# Android build artifacts
+android_app/bin/
+android_app/build/
+android_app/gen/
+android_app/res.zip
+android_app/*.apk
+android_app/*.keystore
+android_app/debug.keystore
+*.idsig
+
+# Received & temporary files
+Received_Files/
+test_scratch/
+logs/
+
+# OS & Editor
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini

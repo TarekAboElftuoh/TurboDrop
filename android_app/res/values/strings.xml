@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TurboDrop</string>
+    <string name="title_app">⚡ TurboDrop Dual-Bond</string>
+    <string name="subtitle_app">Fastest Wi-Fi + Bluetooth Transfer</string>
+    <string name="pc_ip_hint">PC Wi-Fi IP (e.g. 192.168.100.2)</string>
+    <string name="pc_port_hint">Port (5050)</string>
+    <string name="pc_bt_hint">PC Bluetooth MAC (e.g. 2C:33:58:60:72:36)</string>
+    <string name="select_and_send">Select File &amp; Turbo Send 🚀</string>
+    <string name="mode_bonded">Dual-Bonded (Wi-Fi + BT) [Recommended]</string>
+    <string name="mode_wifi_only">Wi-Fi Only (Turbo 100 MB/s)</string>
+    <string name="mode_bt_only">Bluetooth Only</string>
+</resources>

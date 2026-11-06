@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1117"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Top App Branding Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ TurboDrop"
+                    android:textColor="#58A6FF"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Zero-Latency Wi-Fi &amp; Bluetooth Transfer"
+                    android:textColor="#8B949E"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="4dp"
+                android:text="TURBO 2.0"
+                android:textColor="#3FB950"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 1. Connection Mode Selector Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.05"
+                android:text="CONNECTION MODE"
+                android:textColor="#58A6FF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rg_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <RadioButton
+                    android:id="@+id/rb_hybrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="⚡ Hybrid (Wi-Fi + Auto BT Failover)"
+                    android:textColor="#3FB950"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_wifi_only"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="📶 Wi-Fi Only (Turbo Wire Speed 100+ MB/s)"
+                    android:textColor="#F0F6FC"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_bt_only"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="ᛒ Bluetooth Only (No Local Network Required)"
+                    android:textColor="#79C0FF"
+                    android:textSize="13sp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- 2. Target Device Settings Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.05"
+                android:text="REMOTE TARGET"
+                android:textColor="#58A6FF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <!-- Wi-Fi Box -->
+            <LinearLayout
+                android:id="@+id/box_wifi_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PC Wi-Fi IPv4 Address"
+                    android:textColor="#F0F6FC"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_wifi_ip"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_input"
+                        android:hint="192.168.1.100"
+                        android:inputType="textUri"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textColor="#F0F6FC"
+                        android:textColorHint="#484F58"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/btn_test_wifi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/btn_dark"
+                        android:minWidth="64dp"
+                        android:text="Ping"
+                        android:textColor="#3FB950"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_wifi_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Auto-discovery active. Or enter PC IP manually."
+                    android:textColor="#8B949E"
+                    android:textSize="11sp" />
+
+                <!-- Hotspot & PIN Helper Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PIN:"
+                        android:textColor="#8B949E"
+                        android:textSize="11sp" />
+
+                    <EditText
+                        android:id="@+id/et_pin"
+                        android:layout_width="70dp"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_input"
+                        android:gravity="center"
+                        android:hint="None"
+                        android:inputType="number"
+                        android:textColor="#F0F6FC"
+                        android:textColorHint="#484F58"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/btn_detect_hotspot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:background="@drawable/btn_dark"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="⚡ Detect Hotspot"
+                        android:textColor="#58A6FF"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:id="@+id/divider_settings"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#21262D" />
+
+            <!-- Bluetooth Box -->
+            <LinearLayout
+                android:id="@+id/box_bt_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PC Bluetooth Device"
+                    android:textColor="#79C0FF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinner_bt_devices"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input"
+                    android:paddingLeft="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_bt_status"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Select paired PC device from list above"
+                        android:textColor="#8B949E"
+                        android:textSize="11sp" />
+
+                    <Button
+                        android:id="@+id/btn_refresh_bt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:background="@drawable/btn_dark"
+                        android:minWidth="64dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="Refresh"
+                        android:textColor="#8B949E"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 3. Transfer Action Controls Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.05"
+                android:text="TRANSFER ACTIONS"
+                android:textColor="#58A6FF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <!-- Send Entire Folder Button -->
+            <Button
+                android:id="@+id/btn_send_folder"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_cyan"
+                android:text="📁 Send Entire Folder"
+                android:textColor="#0D1117"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- Send Multiple Files Button -->
+            <Button
+                android:id="@+id/btn_send_files"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_blue"
+                android:text="📄 Send Individual Files"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Receive from PC Button -->
+            <Button
+                android:id="@+id/btn_receive_pc"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_green"
+                android:text="📥 Receive from PC (Pull Batch)"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Send Clipboard Text Button -->
+            <Button
+                android:id="@+id/btn_send_clipboard"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_dark"
+                android:text="📋 Send Clipboard Text to PC"
+                android:textColor="#F0F6FC"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_save_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="💾 Incoming files saved to: Download/TurboDrop"
+                android:textColor="#8B949E"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 4. Real-Time Transfer Monitor Card -->
+        <LinearLayout
+            android:id="@+id/layout_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:visibility="gone">
+
+            <!-- Active file title -->
+            <TextView
+                android:id="@+id/tv_active_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:text="[1/1] Ready"
+                android:textColor="#F0F6FC"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/pb_file_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="6dp"
+                android:max="100"
+                android:progress="0" />
+
+            <!-- Total Batch Stats -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_batch_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Batch: 0 / 0 MB (0%)"
+                    android:textColor="#8B949E"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_speed_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0 MB/s"
+                    android:textColor="#58A6FF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pb_batch_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="4dp"
+                android:max="100"
+                android:progress="0" />
+
+            <!-- Metric Badges -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_wifi_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📶 Wi-Fi: Standby"
+                    android:textColor="#3FB950"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/tv_bt_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ᛒ BT: Standby"
+                    android:textColor="#79C0FF"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- Failover Banner -->
+            <TextView
+                android:id="@+id/tv_failover_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="8dp"
+                android:text="⚡ Continuous Stream Active"
+                android:textColor="#58A6FF"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 5. Activity Console Log Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:letterSpacing="0.05"
+                    android:text="ACTIVITY LOG"
+                    android:textColor="#58A6FF"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_copy_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/btn_dark"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Copy Log"
+                    android:textColor="#8B949E"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_log"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_terminal"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:text="TurboDrop Engine Ready.\n"
+                android:textColor="#7EE787"
+                android:textSize="11sp"
+                android:typeface="monospace" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

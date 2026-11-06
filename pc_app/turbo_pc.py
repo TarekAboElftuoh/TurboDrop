@@ -54,7 +54,7 @@ ACCENT_RED = "#F85149"
 TEXT_PRIMARY = "#F0F6FC"
 TEXT_MUTED = "#8B949E"
 
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 
 
 def get_local_ips():

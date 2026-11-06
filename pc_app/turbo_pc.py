@@ -33,6 +33,8 @@ ACCENT_RED = "#F85149"
 TEXT_PRIMARY = "#F0F6FC"
 TEXT_MUTED = "#8B949E"
 
+APP_VERSION = "1.0.0"
+
 
 def get_local_ips():
     ips = []
@@ -49,7 +51,7 @@ def get_local_ips():
 class TurboDropGUI:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("TurboDrop - High-Speed PC Companion")
+        self.root.title(f"TurboDrop v{APP_VERSION} - High-Speed PC Companion")
         self.root.geometry("880x740")
         self.root.minsize(820, 680)
         self.root.configure(bg=BG_DARK)
@@ -121,7 +123,7 @@ class TurboDropGUI:
         title_lbl = tk.Label(header_frame, text="⚡ TurboDrop", font=("Segoe UI", 20, "bold"), fg=ACCENT_CYAN, bg=CARD_BG)
         title_lbl.pack(side=tk.LEFT)
 
-        sub_lbl = tk.Label(header_frame, text=" High-Speed Bidirectional Transfer", font=("Segoe UI", 12), fg=TEXT_MUTED, bg=CARD_BG)
+        sub_lbl = tk.Label(header_frame, text=f" v{APP_VERSION} • High-Speed Transfer", font=("Segoe UI", 11), fg=TEXT_MUTED, bg=CARD_BG)
         sub_lbl.pack(side=tk.LEFT, pady=(5, 0))
 
         # Action buttons in header
